@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Teclado hexagonal interactivo para el sistema de 43 tonos de Harry Partch">
+  <meta name="keywords" content="música microtonal, Harry Partch, 43 tonos, teclado hexagonal, Max/MSP">
+  <meta name="author" content="Tu Nombre">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>Teclado Microtonal Harry Partch 43</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="header">
+    <h1>Teclado Microtonal Harry Partch 43</h1>
+    <p>Sistema de 43 tonos con afinación justa</p>
+  </div>
+
+  <div class="controls">
+    <div class="control-group">
+      <button id="octave-down">-8va</button>
+      <button id="reset-octave">Reset Octava</button>
+      <button id="octave-up">+8va</button>
+    </div>
+    
+    <div class="control-group">
+      <label for="scale-selector">Escala:</label>
+      <select id="scale-selector">
+        <option value="none">Ninguna</option>
+        <optgroup label="Escalas Partch">
+          <option value="otonality">Otonalidad (1-3-5-7-9-11)</option>
+          <option value="utonality">Utonalidad (1/1-1/3-1/5-1/7-1/9-1/11)</option>
+          <option value="major">Mayor</option>
+          <option value="minor">Menor</option>
+          <option value="chromatic">Cromática (43 tonos)</option>
+        </optgroup>
+        <optgroup label="Modos Griegos (Aproximados)">
+          <option value="ionian">Jónico</option>
+          <option value="dorian">Dórico</option>
+          <option value="phrygian">Frigio</option>
+          <option value="lydian">Lidio</option>
+          <option value="mixolydian">Mixolidio</option>
+          <option value="aeolian">Eólico</option>
+          <option value="locrian">Locrio</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label>
+        <input type="checkbox" id="combine-scales">
+        Combinar escalas
+      </label>
+      <button id="clear-scales" style="background: #e74c3c;">Limpiar escalas</button>
+    </div>
+  </div>
+
+  <div class="scale-combination" id="scale-combination" style="display: none;">
+    <h4>Escalas combinadas:</h4>
+    <div id="combined-scales-list"></div>
+  </div>
+
+  <div class="info-panel">
+    <h3>Información en tiempo real</h3>
+    
+    <!-- Modo Monofonía -->
+    <div class="info-section">
+      <h4>Última nota tocada</h4>
+      <div class="info-item">
+        <strong>Nota:</strong> <span id="current-note">-</span>
+      </div>
+      <div class="info-item">
+        <strong>Ratio:</strong> <span id="current-ratio">-</span>
+      </div>
+      <div class="info-item">
+        <strong>Frecuencia:</strong> <span id="current-freq">-</span> Hz
+      </div>
+      <div class="info-item">
+        <strong>Octava:</strong> <span id="current-octave">0</span>
+      </div>
+    </div>
+
+    <!-- Modo Polifonía -->
+    <div class="info-section polyphony-section">
+      <h4>Polifonía Activa <span id="poly-count" class="poly-counter">0</span></h4>
+      <div id="active-notes-container" class="active-notes-grid">
+        <span class="no-notes-message">No hay notas activas</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="keyboard-wrapper">
+    <div class="keyboard-container" id="keyboard-container"></div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/scales.js"></script>
+  <script src="js/keyboard.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
