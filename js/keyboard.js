@@ -131,10 +131,10 @@ function playNote(config) {
     window.max.outlet(adjustedValue, config.name, "127");
   }
   
-  // Actualizar panel de información - ÚLTIMA NOTA (monofonía)
+  // Actualizar panel de información - ÚLTIMA NOTA (monofonía) - MAYOR PRECISIÓN
   document.getElementById('current-note').textContent = `${config.name} (${config.text})`;
   document.getElementById('current-ratio').textContent = config.ratio;
-  document.getElementById('current-freq').textContent = frequency ? frequency.toFixed(2) : '-';
+  document.getElementById('current-freq').textContent = frequency ? frequency.toFixed(6) : '-';
   document.getElementById('current-octave').textContent = realOctave;
   
   // Actualizar monitor de polifonía
@@ -180,7 +180,7 @@ function updatePolyphonyDisplay() {
   const activeNotesArray = Array.from(activeKeys.entries())
     .sort((a, b) => a[1].timestamp - b[1].timestamp);
   
-  // Crear chip para cada nota activa
+  // Crear chip para cada nota activa - MAYOR PRECISIÓN EN FRECUENCIAS
   activeNotesArray.forEach(([keyId, data]) => {
     const config = data.config;
     const frequency = getFrequency(config.value);
@@ -193,7 +193,7 @@ function updatePolyphonyDisplay() {
     
     chip.innerHTML = `
       <span class="note-name">${config.text}</span>
-      <span class="note-freq">${frequency ? frequency.toFixed(1) : '-'} Hz</span>
+      <span class="note-freq">${frequency ? frequency.toFixed(4) : '-'} Hz</span>
       <span class="note-octave">Oct ${realOctave}</span>
     `;
     
