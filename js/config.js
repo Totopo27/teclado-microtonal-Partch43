@@ -170,8 +170,6 @@ const generatePartch43Array = (numOctaves = 7, centerOctave = 0) => {
     return arrayPartch43;
 };
 
-// En las líneas 128 ratio 27/20 y línea 133 ratio 40/27, se han agregado fórmulas para recrear la cuarta y quinta del lobo
-
 // Crear array con 7 octavas (por defecto)
 const arrayPartch43 = generatePartch43Array(7, 0);
 
