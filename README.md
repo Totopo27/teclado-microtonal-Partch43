@@ -49,8 +49,8 @@ Harry Partch (1901-1974) desarrolló un sistema microtonal de **43 tonos por oct
 - **11-límite**: Añade el factor 11 (ej: 11/8, 16/11)
 
 ### Frecuencia base
-- **264 Hz** como 1/1 (Do central)
-- Cada nota se calcula como: `Frecuencia = ratio × 264 Hz × 2^octava`
+- **392 Hz** como 1/1 (sol central)
+- Cada nota se calcula como: `Frecuencia = ratio × 392 Hz × 2^octava`
 
 ### Ratios del sistema (43 tonos)
 
