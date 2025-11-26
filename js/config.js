@@ -101,7 +101,7 @@ const keyConfigurations = [
 // Permite trabajar con múltiples octavas hacia arriba y hacia abajo
 
 const generatePartch43Array = (numOctaves = 7, centerOctave = 0) => {
-    const baseFrequency = 264; // C = 264 Hz como 1/1 en octava central
+    const baseFrequency = 392; // G = 392 Hz como 1/1 en octava central (A = 441)
     const tonesPerOctave = 43;
     
     // Ratios de Harry Partch (43 tonos) en orden ascendente
