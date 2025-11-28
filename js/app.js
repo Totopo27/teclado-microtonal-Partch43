@@ -1,10 +1,10 @@
 // js/app.js
 // Inicialización y gestión de eventos para Harry Partch 43
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   // Generar teclado al cargar
   generateKeyboard();
-  
+
   // Controles de octava
   document.getElementById('octave-up').addEventListener('click', () => {
     currentOctave = Math.min(currentOctave + 1, 2);
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Selector de escala
   document.getElementById('scale-selector').addEventListener('change', (e) => {
     const selectedScale = e.target.value;
-    
+
     if (combineMode) {
       if (selectedScale !== 'none') {
         combinedScales.add(selectedScale);
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
       combinedScales.clear();
       updateCombinedScalesList();
     }
-    
+
     updateScaleDisplay();
   });
 
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('combine-scales').addEventListener('change', (e) => {
     combineMode = e.target.checked;
     const combinationPanel = document.getElementById('scale-combination');
-    
+
     if (combineMode) {
       combinationPanel.style.display = 'block';
       if (currentScale !== 'none') {
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       combinedScales.clear();
     }
-    
+
     updateCombinedScalesList();
     updateScaleDisplay();
   });
@@ -72,6 +72,20 @@ document.addEventListener('DOMContentLoaded', function() {
     updateScaleDisplay();
   });
 
+  // Control de frecuencia base
+  document.getElementById('base-frequency').addEventListener('change', (e) => {
+    const newFrequency = parseFloat(e.target.value);
+
+    // Validar rango
+    if (newFrequency >= 200 && newFrequency <= 600) {
+      updateBaseFrequency(newFrequency);
+      console.log(`Nueva frecuencia base: ${newFrequency} Hz`);
+    } else {
+      alert('Por favor ingresa una frecuencia entre 200 y 600 Hz');
+      e.target.value = baseFrequency; // Restaurar valor anterior
+    }
+  });
+
   // Mapeo QWERTY para 43 notas (distribución en 2 filas)
   const keyMap = {
     // Fila superior (0-21)
@@ -80,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
     'q': '10', 'w': '11', 'e': '12', 'r': '13', 't': '14',
     'y': '15', 'u': '16', 'i': '17', 'o': '18', 'p': '19',
     '[': '20', ']': '21',
-    
+
     // Fila inferior (22-42)
     'a': '22', 's': '23', 'd': '24', 'f': '25', 'g': '26',
     'h': '27', 'j': '28', 'k': '29', 'l': '30', ';': '31',
@@ -106,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
       pressedKeys.add(e.key);
       const buttonId = controlKeys[e.key];
       document.getElementById(buttonId).click();
-      
+
       const button = document.getElementById(buttonId);
       button.style.transform = 'scale(0.95)';
       setTimeout(() => {
@@ -127,12 +141,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
   document.addEventListener('keyup', (e) => {
     const key = e.key.toLowerCase();
-    
+
     if (controlKeys[e.key]) {
       pressedKeys.delete(e.key);
       return;
     }
-    
+
     if (keyMap[key]) {
       pressedKeys.delete(key);
       const config = keyConfigurations.find(c => c.id === keyMap[key]);
