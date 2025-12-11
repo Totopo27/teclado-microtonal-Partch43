@@ -40,6 +40,22 @@ document.addEventListener('DOMContentLoaded', function () {
     updateScaleDisplay();
   });
 
+  // Selector de Límites
+  document.getElementById('limit-selector').addEventListener('change', (e) => {
+    const selectedLimit = e.target.value;
+    console.log(`Límite seleccionado: Grado ${selectedLimit}`);
+
+    if (selectedLimit === 'none') {
+      if (typeof restoreOriginalColors === 'function') {
+        restoreOriginalColors();
+      }
+    } else {
+      if (typeof applyLimitColors === 'function') {
+        applyLimitColors(selectedLimit);
+      }
+    }
+  });
+
   // Checkbox de combinación de escalas
   document.getElementById('combine-scales').addEventListener('change', (e) => {
     combineMode = e.target.checked;

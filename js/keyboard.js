@@ -11,11 +11,11 @@ let combinedScales = new Set();
 // Obtener octava real de una tecla basada en su valor
 function getRealOctave(value) {
   // Lógica para Partch 43:
-  // 133-175 = octava -1 (fila inferior, notas 0-42)
-  // 174-217 = octava 0 (fila superior, notas 0-42 + nota 0 adicional)
-  
-  if (value >= 133 && value <= 175) return -1;
-  if (value >= 174 && value <= 217) return 0;
+  // 129-171 = octava -1 (fila inferior, notas 0-42)
+  // 172-215 = octava 0 (fila superior, notas 0-42 + nota 0 adicional)
+
+  if (value >= 129 && value <= 171) return -1;
+  if (value >= 172 && value <= 215) return 0;
   return 0;
 }
 
@@ -39,17 +39,17 @@ function getRatio(config) {
 function generateKeyboard() {
   const container = document.getElementById('keyboard-container');
   container.innerHTML = '';
-  
+
   keyConfigurations.forEach(config => {
     const hexagon = document.createElement('div');
     hexagon.className = 'hexagon';
     hexagon.id = config.id;
     hexagon.style.top = `${config.top}px`;
     hexagon.style.left = `${config.left}px`;
-    
+
     const colorClass = `hexagon-in2-${config.color}`;
     const noteIndex = parseInt(config.text);
-    
+
     hexagon.innerHTML = `
       <div class="hexagon-in1">
         <div class="hexagon-in2 ${colorClass}" data-value="${config.value}" data-name="${config.name}" data-note="${noteIndex}">
@@ -58,9 +58,9 @@ function generateKeyboard() {
         </div>
       </div>
     `;
-    
+
     const innerHex = hexagon.querySelector('.hexagon-in2');
-    
+
     // Eventos de mouse (para desktop)
     innerHex.addEventListener('mousedown', (e) => {
       e.preventDefault();
@@ -73,33 +73,33 @@ function generateKeyboard() {
     innerHex.addEventListener('mouseleave', () => {
       if (activeKeys.has(config.id)) stopNote(config);
     });
-    
+
     // Eventos táctiles (para móviles) - SOPORTE MULTI-TOUCH
     innerHex.addEventListener('touchstart', (e) => {
       e.preventDefault();
       playNote(config);
     }, { passive: false });
-    
+
     innerHex.addEventListener('touchend', (e) => {
       e.preventDefault();
       stopNote(config);
     }, { passive: false });
-    
+
     innerHex.addEventListener('touchcancel', (e) => {
       e.preventDefault();
       stopNote(config);
     }, { passive: false });
-    
+
     // Guardar referencia al elemento para acceso directo
     config.element = innerHex;
-    
+
     container.appendChild(hexagon);
   });
-  
+
   // Agregar listener global para manejar toques que salen del área
   document.addEventListener('touchend', handleGlobalTouchEnd);
   document.addEventListener('touchcancel', handleGlobalTouchEnd);
-  
+
   updateScaleDisplay();
 }
 
@@ -113,30 +113,30 @@ function handleGlobalTouchEnd(e) {
 // Reproducir nota
 function playNote(config) {
   if (activeKeys.has(config.id)) return;
-  
+
   activeKeys.set(config.id, {
     config: config,
     timestamp: Date.now()
   });
-  
+
   const element = document.getElementById(config.id).querySelector('.hexagon-in2');
   element.classList.add('active');
-  
+
   const adjustedValue = config.value + (currentOctave * 43);
   const frequency = getFrequency(config.value);
   const realOctave = getRealOctave(config.value) + currentOctave;
-  
+
   // Enviar a Max/MSP si está disponible
   if (window.max && typeof window.max.outlet === 'function') {
     window.max.outlet(adjustedValue, config.name, "127");
   }
-  
+
   // Actualizar panel de información - ÚLTIMA NOTA (monofonía) - MAYOR PRECISIÓN
   document.getElementById('current-note').textContent = `${config.name} (${config.text})`;
   document.getElementById('current-ratio').textContent = config.ratio;
   document.getElementById('current-freq').textContent = frequency ? frequency.toFixed(6) : '-';
   document.getElementById('current-octave').textContent = realOctave;
-  
+
   // Actualizar monitor de polifonía
   updatePolyphonyDisplay();
 }
@@ -144,17 +144,17 @@ function playNote(config) {
 // Detener nota
 function stopNote(config) {
   if (!activeKeys.has(config.id)) return;
-  
+
   activeKeys.delete(config.id);
   const element = document.getElementById(config.id).querySelector('.hexagon-in2');
   element.classList.remove('active');
-  
+
   const adjustedValue = config.value + (currentOctave * 43);
-  
+
   if (window.max && typeof window.max.outlet === 'function') {
     window.max.outlet(adjustedValue, config.name, "0");
   }
-  
+
   // Actualizar monitor de polifonía
   updatePolyphonyDisplay();
 }
@@ -163,45 +163,45 @@ function stopNote(config) {
 function updatePolyphonyDisplay() {
   const container = document.getElementById('active-notes-container');
   const counter = document.getElementById('poly-count');
-  
+
   // Actualizar contador
   counter.textContent = activeKeys.size;
-  
+
   // Limpiar contenedor
   container.innerHTML = '';
-  
+
   // Si no hay notas activas
   if (activeKeys.size === 0) {
     container.innerHTML = '<span class="no-notes-message">No hay notas activas</span>';
     return;
   }
-  
+
   // Convertir Map a Array y ordenar por timestamp (orden de pulsación)
   const activeNotesArray = Array.from(activeKeys.entries())
     .sort((a, b) => a[1].timestamp - b[1].timestamp);
-  
+
   // Crear chip para cada nota activa - MAYOR PRECISIÓN EN FRECUENCIAS
   activeNotesArray.forEach(([keyId, data]) => {
     const config = data.config;
     const frequency = getFrequency(config.value);
     const realOctave = getRealOctave(config.value) + currentOctave;
-    
+
     const chip = document.createElement('div');
     chip.className = 'note-chip';
     chip.setAttribute('data-octave', realOctave);
     chip.setAttribute('data-key', keyId);
-    
+
     chip.innerHTML = `
       <span class="note-name">${config.text}</span>
       <span class="note-freq">${frequency ? frequency.toFixed(4) : '-'} Hz</span>
       <span class="note-octave">Oct ${realOctave}</span>
     `;
-    
+
     // Animación de salida al hacer clic
     chip.addEventListener('click', () => {
       stopNote(config);
     });
-    
+
     container.appendChild(chip);
   });
 }
@@ -217,7 +217,7 @@ function updateScaleDisplay() {
 
   // PASO 2: Determinar qué notas iluminar
   let allScaleNotes = new Set();
-  
+
   if (combineMode && combinedScales.size > 0) {
     // Modo combinación: unir todas las escalas seleccionadas
     combinedScales.forEach(scaleName => {
@@ -231,15 +231,15 @@ function updateScaleDisplay() {
     const scaleNotes = scales[currentScale] || [];
     scaleNotes.forEach(note => allScaleNotes.add(note));
   }
-  
+
   // Convertir Set a Array ordenado
   const notesToHighlight = Array.from(allScaleNotes).sort((a, b) => a - b);
-  
+
   // PASO 3: Aplicar el resaltado solo a las notas correspondientes
   if (notesToHighlight.length > 0) {
     keyConfigurations.forEach(config => {
       const noteIndex = parseInt(config.text);
-      
+
       if (notesToHighlight.includes(noteIndex)) {
         if (config.element) {
           config.element.classList.add('scale-highlight');
@@ -253,12 +253,12 @@ function updateScaleDisplay() {
 function updateCombinedScalesList() {
   const listContainer = document.getElementById('combined-scales-list');
   listContainer.innerHTML = '';
-  
+
   if (combinedScales.size === 0) {
     listContainer.innerHTML = '<span style="color: #95a5a6;">No hay escalas combinadas</span>';
     return;
   }
-  
+
   combinedScales.forEach(scaleName => {
     const tag = document.createElement('div');
     tag.className = 'scale-tag';
@@ -266,14 +266,14 @@ function updateCombinedScalesList() {
       ${scaleNames[scaleName] || scaleName}
       <span class="remove-scale" data-scale="${scaleName}">✕</span>
     `;
-    
+
     tag.querySelector('.remove-scale').addEventListener('click', (e) => {
       e.stopPropagation();
       combinedScales.delete(scaleName);
       updateCombinedScalesList();
       updateScaleDisplay();
     });
-    
+
     listContainer.appendChild(tag);
   });
 }

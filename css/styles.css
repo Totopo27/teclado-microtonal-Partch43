@@ -22,6 +22,7 @@
   --red-key: #da3347;
   --green-key: #09949b;
   --blue-key: #3498db;
+  --celeste-key: #87CEEB;
   --black-key: #555555;
   --hover-color: #f1c40f;
   --key-width: 180px;
@@ -199,6 +200,10 @@ select option {
   background: var(--blue-key);
 }
 
+.hexagon-in2-celeste {
+  background: var(--celeste-key);
+}
+
 .hexagon-in2-green {
   background: var(--green-key);
 }
@@ -232,7 +237,7 @@ select option {
 .hexagon-main-text {
   position: absolute;
   top: 50%;
-  right: 36%;
+  right: 25%;
   /* Cambiado a right para posicionar a la derecha */
   transform: translateY(-50%) rotate(90deg);
   /* Cambiado a translateY y agregado rotate(90deg) */
@@ -250,7 +255,7 @@ select option {
 .hexagon-ratio-text {
   position: absolute;
   top: 50%;
-  left: 36%;
+  left: 25%;
   /* Cambiado de 50% a 25% para posicionar a la izquierda */
   transform: translateY(-50%) rotate(90deg);
   /* Cambiado a translateY y agregado rotate(90deg) */
